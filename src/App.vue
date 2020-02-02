@@ -26,7 +26,6 @@ export default {
 }
 
 .section {
-  padding-top: 65px;
-  padding-bottom: 0.75em;
+  padding-top: 80px;
 }
 </style>

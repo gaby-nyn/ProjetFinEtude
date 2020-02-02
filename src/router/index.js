@@ -6,6 +6,8 @@ import LoginForm from '../views/Login.vue'
 import MenCategory from '../views/MenCategory.vue'
 import WomenCategory from '../views/WomenCategory.vue'
 import KidCategory from '../views/KidCategory.vue'
+import Cart from '../views/Cart.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,7 +40,12 @@ const routes = [
     path: '/kids',
     name: 'kidscategory',
     component: KidCategory
-  }
+  },
+  {
+    path: '/cart',
+    name: 'cart',
+    component: Cart
+  },
 
 ]
 
