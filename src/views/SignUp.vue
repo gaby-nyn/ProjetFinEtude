@@ -118,6 +118,13 @@ export default {
             if(!this.validateUsername && !this.validatePassword && !this.validateMatchingPassword){                
                 e.preventDefault();
             }
+            else {
+                this.createUser;
+            }
+        },
+        createUser() {
+            this.user.username = this.username;
+            this.user.password = this.password;            
         }
     },
     computed: {
