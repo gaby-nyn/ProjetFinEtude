@@ -1,15 +1,15 @@
 <template>
     <div>
         <h1 class="title">Enter credit card information here</h1>
-        <CreditCardForm></CreditCardForm>
+        <CheckoutForm></CheckoutForm>
     </div>
 </template>
 <script>
-import CreditCardForm from '@/components/CreditCardForm.vue'
+import CreditCardForm from '@/components/CheckoutForm.vue'
 export default {
     name: 'Cart',
     components: {
-        CreditCardForm,
+        CheckoutForm,
     }
 }
 </script>

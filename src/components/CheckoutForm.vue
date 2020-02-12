@@ -47,7 +47,7 @@
 <script>
 
 export default {
-    name: 'CreditCardForm',
+    name: 'CheckoutForm',
     directives: {
         'number-only': {
             bind (el) {

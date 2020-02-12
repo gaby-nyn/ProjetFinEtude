@@ -1,9 +1,10 @@
 <template>
 <nav class="navbar has-shadow-custom is-fixed-top" role="navigation" aria-label="dropdown navigation">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <div class="container is-fluid">
         <div class="navbar-brand">
             <a>
-            <router-link to="/"><img src="@/assets/logo.jpg" width="120px"></router-link>
+            <router-link to="/"><img src="@/assets/logo.jpg" width="120"></router-link>
             </a>
         </div>
 
@@ -31,7 +32,7 @@
                         <router-link to="/login">Log in</router-link>
                     </a>
                     <a>
-                        <router-link to="/cart"><img src="@/assets/cart-outline.png" width="40px"></router-link>
+                        <router-link to="/cart"><i class="fas fa-shopping-cart fa-2x"/></router-link>
                     </a>
                 </div>
             </div>
@@ -43,5 +44,8 @@
 <style scoped>
 nav {
     background-color: lightgray;
+}
+i {
+    color: black;
 }
 </style>
