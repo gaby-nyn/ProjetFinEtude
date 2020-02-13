@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form  @submit="validateRegistration" action="/" novalidate="true">
+        <form  @submit.prevent="validateRegistration">
             <div class="columns">
                 <div class="column is-one-quarter" name="CreditCardInformation">
                     <h2 class="subtitle">Payment</h2>
@@ -13,28 +13,39 @@
                     </div>
                     <div class="field">
                         <label class="label">Card holder</label>
-                        <input v-model="CardHolder" type="text" class="input" placeholder="Enter card holder here" v-letter-only/>
+                        <input v-bind:class="{'is-danger' : !validateCardHolder}" v-model="CardHolder" type="text" class="input" placeholder="Enter card holder here" v-letter-only/>
+                        <p v-if="!validateCardHolder" class="help is-danger">
+                            *Card holder required
+                        </p>                        
                     </div>
                     <div class="field">
                         <label class="label">Expiration date</label>
-                        <div class="select">
-                            <select v-model="month" name="expirationDate">
+                        <div class="select" v-bind:class="{'is-danger' : !validateMonth}" name="Month">
+                            <select v-model="Month">
                                 <option disabled selected>Month</option>
                                 <option v-bind:value="n < 10 ? '0' + n : n" v-for="n in 12" v-bind:disabled="n < minCardMonth" v-bind:key="n">
                                     {{n &lt; 10 ? '0' + n : n}}
                                 </option>
-                            </select>                
+                            </select> 
+                            <p v-if="!validateMonth" class="help is-danger">
+                                *Month required
+                            </p>                                           
                         </div>
-                        <div class="select">
-                            <select v-model="Year" name="expirationDate">
+                        <div class="select" v-bind:class="{'is-danger' : !validateYear}" name="Year">
+                            <select v-model="Year">
                                 <option disabled selected>Year</option>
                                 <option v-bind:value="$index + minCardYear" v-for="(n, $index) in 12" v-bind:key="n">
                                     {{$index + minimumYear}}
                                 </option>
-                            </select>                
+                            </select>
+                            <p v-if="!validateYear" class="help is-danger">
+                                *Year required
+                            </p>                                            
                         </div>
+                    </div>
+                    <div class="field" name="cvcField">
                         <label class="label">CVC</label>
-                        <input class="input" v-bind:class="{'is-danger' : !validateCVC}" v-model="CVC" type="text" placeholder="Insert CVC here">
+                        <input class="input" v-bind:class="{'is-danger' : !validateCVC}" v-model="CVC" type="text" placeholder="Insert CVC here" v-number-only>
                         <p v-if="!validateCVC" class="help is-danger">
                             *Invalid CVC, 3 numbers required
                         </p>              
@@ -44,11 +55,14 @@
                     <h2 class="subtitle">Billing details</h2>
                     <div class="field">
                         <label class="label">Address</label>
-                        <input v-model="Address" type="text" class="input" placeholder="Enter your address here"/>
+                        <input v-bind:class="{'is-danger' : !validateAddress}" v-model="Address" type="text" class="input" placeholder="Enter your address here"/>
+                        <p v-if="!validateAddress" class="help is-danger">
+                            *Address required
+                        </p>                        
                     </div>
                     <div class="field">
                         <label class="label">Country</label>
-                        <div class="select">
+                        <div class="select" v-bind:class="{'is-danger': !validateCountry}">
                             <select v-model="Country">
                                 <option disabled selected>Country</option>
                                 <option value="Afghanistan">Afghanistan</option>
@@ -297,27 +311,48 @@
                                 <option value="Zimbabwe">Zimbabwe</option>
                             </select>
                         </div>
+                        <p v-if="!validateCountry" class="help is-danger">
+                            *Country is required
+                        </p>                         
                     </div>
                     <div class="field is-horizontal">
-                        <div>
+                        <div name="City">
                             <label class="label">City</label>
-                            <input v-model="City" type="text" class="input" placeholder="Enter your city here"/>
+                            <input v-model="City" v-bind:class="{'is-danger' : !validateCity}" type="text" class="input" placeholder="Enter your city here" v-letter-only/>
+                            <p v-if="!validateCity" class="help is-danger">
+                                *City required
+                            </p>                             
                         </div>
-                        <div>
+                        <div name="State">
                             <label class="label">State</label>
-                            <input v-model="State" type="text" class="input" placeholder="Enter your state here"/>
+                            <input v-model="State" v-bind:class="{'is-danger': !validateState}" type="text" class="input" placeholder="Enter your state here" v-letter-only/>
+                            <p v-if="!validateState" class="help is-danger">
+                                *State required
+                            </p>                             
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">Zip Code</label>
-                        <input v-model="ZipCode" type="text" class="input" placeholder="Enter your zip code here"/>
+                        <input v-bind:class="{'is-danger' : !validateZipCode}" v-model="ZipCode" type="text" class="input" placeholder="Enter your zip code here"/>
+                            <p v-if="!validateZipCode" class="help is-danger">
+                                *Zip code required
+                            </p>                         
                     </div>           
                 </div>
             </div>
             <div class="field">
-                <p class="control">
-                    <input type="submit" value="Submit" class="button is-success">
-                </p>
+                <button
+                class="button is-success"
+                type="submit"
+                >
+                Submit
+                &nbsp;
+                <i
+                    :class="{
+                    'fa fa-check' : CreationSuccess === true,
+                    'far fa-times-circle' : CreationSuccess === false,}"
+                ></i>
+                </button>                    
             </div>            
         </form>
     </div>
@@ -364,28 +399,43 @@ export default {
             Address: '',
             Country: '',
             State: '',
-            ZipCode: '',
             City: '',
+            ZipCode: '',
+            AddressObj: {},
             
+            //Other values
+            CreationSuccess: null,
             minimumYear: new Date().getFullYear(),
             
         }
     },
     methods: {
-        validateRegistration: function(e){
-            if(!this.validateCardNumber && !this.validateCVC){
-                e.preventDefault();
+        validateRegistration() {
+            if(!this.validateCardNumber || !this.validateCVC || !this.validateMonth
+            || !this.validateYear || !this.validateCardHolder || !this.validateAddress
+            || !this.validateCountry || !this.validateState || !this.validateZipCode || !this.validateCity){
+                this.CreationSuccess = false;
             }
             else{
-                this.registerCard;  
+                this.CreationSuccess = true;
+                this.registerCard;
+                this.registerAddress;
+                this.$router.push('/');  
             }
         },
-        registerCard(){
+        registerCard() {
             this.Card.number = this.CreditCardNumber;
             this.Card.holder = this.CardHolder;
             this.Card.Month = this.Month;
             this.Card.Year = this.Year;
             this.Card.CVC = this.CVC;
+        },
+        registerAddress() {
+            this.AddressObj.Address = this.Address;
+            this.AddressObj.Country = this.Country;
+            this.AddressObj.State = this.State;
+            this.AddressObj.City = this.City;
+            this.AddressObj.ZipCode = this.ZipCode;
         }
     },
     computed: {
@@ -411,11 +461,65 @@ export default {
             }
             return false;
         },
+        validateMonth() {
+            if(this.Month != '') {
+                return true;
+            }
+            return false;
+        },
+        validateYear() {
+            if(this.Year != '') {
+                return true;
+            }
+            return false;
+        },
+        validateCardHolder() {
+            if(this.CardHolder != '') {
+                return true;
+            }
+            return false;
+        },
+        validateAddress() {
+            if(this.Address !='') {
+                return true;
+            }
+            return false;
+        },
+        validateCountry() {
+            if(this.Country !='') {
+                return true;
+            }
+            return false;
+        },
+        validateState() {
+            if(this.State !='') {
+                return true;
+            }
+            return false;
+        },
+        validateZipCode() {
+            if(this.ZipCode !='') {
+                return true;
+            }
+            return false;
+        },
+        validateCity() {
+            if(this.City !='') {
+                return true;
+            }
+            return false;
+        },
     }
 }
 </script>
 <style scoped>
-.select select [name="expirationDate"]{
+div [name="Year"]{
+    padding-left: 0.5rem;
+}
+div [name="cvcField"] {
+    padding-top: 20px;
+}
+div [name="State"] {
     padding-left: 0.5rem;
 }
 .input {

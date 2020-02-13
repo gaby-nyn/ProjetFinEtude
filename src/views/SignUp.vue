@@ -1,5 +1,5 @@
 <template>
-    <form @submit="validateCreation" action="/" novalidate="true">
+    <form @submit.prevent="validateCreation" action="/" novalidate="true">
         <div>
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
             <h1 class="title">Sign up</h1>
@@ -93,10 +93,19 @@
             </div>
 
             <div class="field">
-                <p class="control">
-                    <input type="submit" value="Submit" class="button is-success">
-                </p>
-            </div>
+                <button
+                class="button is-success"
+                type="submit"
+                >
+                Submit
+                &nbsp;
+                <i
+                    :class="{
+                    'fa fa-check' : CreationSuccess === true,
+                    'far fa-times-circle' : CreationSuccess === false,}"
+                ></i>
+                </button>                    
+            </div> 
 
         </div>
     </form>
@@ -111,15 +120,18 @@ export default {
             passwordMatch: null,
             user: {},
             role: {},
+            CreationSuccess: null,
         }
     },
     methods: {
-        validateCreation: function(e) {
-            if(!this.validateUsername && !this.validatePassword && !this.validateMatchingPassword){                
-                e.preventDefault();
+        validateCreation() {
+            if(!this.validateUsername || !this.validatePassword || !this.validateMatchingPassword){                
+                this.CreationSuccess = false;
             }
             else {
+                this.CreationSuccess = true;
                 this.createUser;
+                this.$router.push('/');
             }
         },
         createUser() {
