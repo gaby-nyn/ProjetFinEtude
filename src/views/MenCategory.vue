@@ -68,7 +68,6 @@
             <Item class="item"></Item>
             <Item class="item"></Item>
             <Item class="item"></Item>
-            <Item class="item"></Item>
         </div>        
     </div>
 </div>
