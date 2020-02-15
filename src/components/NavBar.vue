@@ -32,7 +32,7 @@
                         <router-link to="/login">Log in</router-link>
                     </a>
                     <a>
-                        <router-link to="/cart"><i class="fas fa-shopping-cart fa-2x"/></router-link>
+                        <router-link to="/checkout"><i class="fas fa-shopping-cart fa-2x"/></router-link>
                     </a>
                 </div>
             </div>
