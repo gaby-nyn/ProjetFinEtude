@@ -2,29 +2,29 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-import authentification from './modules/authentification'
-import commande from './modules/commande'
-import facture from './modules/facture'
-import produit from './modules/produit'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-
+        Produit: {},
+        listeProduits: [],
     },
     mutations: {
-
+        LISTE_PRODUITS(state, Products) {
+            state.listeProduits = Products;
+        },
     },
     actions: {
-        fakeaction(){
-            axios.get();
+        getListeProduit({ commit }){
+
+            const Products = [];
+
+            axios.get('/api/Produits').then((response) => {
+                for (let i = 0; i < response.data.length; i += 1){
+                    Products.push(response.data[i]);
+                }
+                commit('LISTE_PRODUITS', Products);
+            });
         }
-    },
-    modules: {
-        authentification,
-        commande,
-        facture,
-        produit
-    }        
+    },       
 })

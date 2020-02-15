@@ -6,7 +6,7 @@ import LoginForm from '../views/Login.vue'
 import MenCategory from '../views/MenCategory.vue'
 import WomenCategory from '../views/WomenCategory.vue'
 import KidCategory from '../views/KidCategory.vue'
-import Cart from '../views/Cart.vue'
+import Checkout from '../views/Checkout.vue'
 
 Vue.use(VueRouter)
 
@@ -42,9 +42,9 @@ const routes = [
     component: KidCategory
   },
   {
-    path: '/cart',
-    name: 'cart',
-    component: Cart
+    path: '/checkout',
+    name: 'checkout',
+    component: Checkout
   },
 
 ]
