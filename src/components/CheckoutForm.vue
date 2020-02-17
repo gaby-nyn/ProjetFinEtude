@@ -358,6 +358,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 
 export default {
     name: 'CheckoutForm',
@@ -418,17 +419,39 @@ export default {
             }
             else{
                 this.CreationSuccess = true;
-                this.registerCard;
-                this.registerAddress;
+                this.registerCard();
+                this.registerAddress();
                 this.$router.push('/');  
             }
         },
-        registerCard() {
+        registerCard() {                                    //Méthode pour ajouter carte à commande
             this.Card.number = this.CreditCardNumber;
             this.Card.holder = this.CardHolder;
             this.Card.Month = this.Month;
             this.Card.Year = this.Year;
             this.Card.CVC = this.CVC;
+            axios({
+                method: 'POST',
+                url: '/api/Credits/',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: {
+                    Id : this.CreditCardNumber,
+                    proprietaire : this.CardHolder,
+                    month : this.Month,
+                    annee : this.Year,
+                    cvc : this.CVC,
+                    adresse : this.Adresse,
+                },
+            }).then({
+                method: 'POST',
+                url: `/api/Commandes/${this.commande.id}`,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: {
+                    //
+                },                
+            });            
         },
         registerAddress() {
             this.AddressObj.Address = this.Address;
@@ -436,6 +459,9 @@ export default {
             this.AddressObj.State = this.State;
             this.AddressObj.City = this.City;
             this.AddressObj.ZipCode = this.ZipCode;
+        },
+        submitInformation() {
+            this.registerCard();            
         }
     },
     computed: {

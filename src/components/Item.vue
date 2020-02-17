@@ -25,36 +25,31 @@
                 <p v-if="!validateSize" class="help is-danger">
                     *Can't be empty
                 </p>                
-            </div>
-            <div class="field">
-                <label class="label">Quantity</label>
-                <input v-if="!validateQuantity" class="input" v-bind:class="{'is-danger' : !validateQuantity}" type="text" placeholder="Enter quantity here" v-model="quantity"/>
-                <input v-else class="input" type="text" placeholder="Enter quantity here" v-model="quantity"/>
-                <p v-if="!validateQuantity" class="help is-danger">
-                    *Can't be empty
-                </p> 
             </div>               
             </section>
             <footer class="modal-card-foot">
             <button
                 class="button is-success"
-                @click="hideModal"
+                @click="addToCommande"
             >
                 Confirm</button>
             <button class="button is-danger" @click="hideModal">Cancel</button>
             </footer>
         </div>
-    </div>    
+    </div>
 </div>
 </template>
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 export default {
+    components: {
+    },
     data() {
         return {     
             isActive : false,
             quantity : '',
-            size: '',       
+            size: '', 
+            prod: {},      
         };
     },
     props : ["item"],
@@ -64,7 +59,11 @@ export default {
         },
         hideModal() {
             this.isActive = false;
-        }        
+        },
+        addToCommande() {
+             this.$emit('add-commande', this.prod);
+             this.isActive = false;
+        },
     },
     computed : {
         validateSize() {
@@ -73,12 +72,16 @@ export default {
             }
             return false;
         },
-        validateQuantity() {
-            if(this.quantity !== '') {
-                return true;
+    },
+    created() {
+        axios.get("/api/Produits")
+        .then((response) =>{
+            for (let i = 0; i < response.data.length; i += 1) {
+                if(response.data[i].id == this.$props.item.id) {                        
+                    this.prod = response.data[i]
+                }
             }
-            return false;
-        }
-    }
-}
+        });            
+    }, 
+}   
 </script>

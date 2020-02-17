@@ -100,8 +100,12 @@ export default {
             .then((response) =>{
                 for (let i = 0; i < response.data.length; i += 1) {
                     if(response.data[i].categorie == 'Femme') {
-                        if(response.data[i].typeSoulier == this.type || response.data[i].marque == this.brand)
-                        this.products.push(response.data[i]);
+                        if (this.type.length == 0 && this.brand.length == 0) {
+                            this.products.push(response.data[i]);
+                        }                        
+                        else if(response.data[i].typeSoulier == this.type || response.data[i].marque == this.brand) {
+                            this.products.push(response.data[i]);
+                        }
                     }
                 }
             });           
